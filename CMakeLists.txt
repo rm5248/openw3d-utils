@@ -11,7 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
-find_package(Boost REQUIRED COMPONENTS iostreams)
+
+# https://github.com/lballabio/QuantLib/issues/2088#issuecomment-2405001198
+if (POLICY CMP0167)
+    # The FindBoost module is removed in cmake 3.30, finding the upstream BoostConfig.cmake
+    find_package(Boost CONFIG REQUIRED)
+else()
+    find_package(Boost REQUIRED)
+endif()
 
 set(PROJECT_SOURCES
         main.cpp
