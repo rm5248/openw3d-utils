@@ -43,7 +43,7 @@ public:
      * @param mode
      * @return
      */
-    bool open(std::filesystem::path mix_file);
+    bool open(const std::filesystem::path mix_file);
 
     /**
      * Close the current MIX file.

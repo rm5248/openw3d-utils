@@ -82,7 +82,7 @@ QSet<QString> MIXFileModel::validExtensions() const{
     QSet<QString> ret;
 
     for(const std::string& str : m_mix_filenames){
-        std::filesystem::path path = str;
+        const std::filesystem::path path = str;
         ret.insert(QString::fromStdString(path.extension()));
     }
 
@@ -102,7 +102,7 @@ void MIXFileModel::filterFiles(){
     std::vector<std::string> names = m_mix->filenames();
     m_mix_filenames.clear();
     for(const std::string& name : names){
-        std::filesystem::path path = name;
+        const std::filesystem::path path = name;
         QString filename_str = QString::fromStdString(name);
         QString extension_str = QString::fromStdString(path.extension());
 

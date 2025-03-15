@@ -51,7 +51,7 @@ void RMMixViewer::on_actionOpen_triggered()
                                                     QString(),
                                                     tr("MIX Files (*.mix *.MIX *.dat *.DAT);;All Files (*)"));
 
-    std::filesystem::path path = fileName.toStdString();
+    const std::filesystem::path path = fileName.toStdString();
     if(!m_mix.open(path)){
         QMessageBox::critical(this, "Unable to open MIX", "Unable to open MIX file");
         return;

@@ -22,7 +22,7 @@ MIXFile::MIXFile()
 
 }
 
-bool MIXFile::open(std::filesystem::path mix_file){
+bool MIXFile::open(const std::filesystem::path mix_file){
     if( m_mix_file.is_open() ){
         m_mix_file.close();
     }
