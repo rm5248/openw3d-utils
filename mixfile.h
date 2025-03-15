@@ -31,7 +31,12 @@ public:
      * @param mode
      * @return
      */
-    bool open(std::filesystem::path mix_file, boost::iostreams::mapped_file::mapmode mode = boost::iostreams::mapped_file::mapmode::readonly);
+    bool open(std::filesystem::path mix_file);
+
+    /**
+     * Close the current MIX file.
+     */
+    void close();
 
     /**
      * Get the filenames in a MIX file.
@@ -47,6 +52,22 @@ public:
      * @return
      */
     std::optional<std::span<const char>> get_file(const std::string& filename);
+
+    /**
+     * Get the size of the specified file.  Returns 0 if the file does not exist.
+     *
+     * @param filename
+     * @return
+     */
+    uint32_t get_file_size(const std::string& filename);
+
+    /**
+     * Check if the given file exists in the MIX file.
+     *
+     * @param filename
+     * @return
+     */
+    bool file_exists(const std::string& filename);
 
 private:
     struct FileInfoStruct_Mix1 {

@@ -17,34 +17,17 @@ struct MIXFile_DataHeader1
     uint32_t	file_count;
 };
 
-static uint64_t get_page_size() {
-#ifdef _WIN32
-    SYSTEM_INFO sysInfo;
-    GetSystemInfo(&sysInfo);
-    return (uint64_t) sysInfo.dwPageSize;
-#else
-    return (uint64_t) sysconf(_SC_PAGE_SIZE);
-#endif
-}
-
 MIXFile::MIXFile()
 {
 
 }
 
-bool MIXFile::open(std::filesystem::path mix_file, boost::iostreams::mapped_file::mapmode mode){
+bool MIXFile::open(std::filesystem::path mix_file){
     if( m_mix_file.is_open() ){
         m_mix_file.close();
     }
 
-    boost::iostreams::mapped_file_params parameters;
-    parameters.path = mix_file;
-//    parameters.length = 0;
-    parameters.flags = mode;
-    parameters.offset = get_page_size();
-
-    m_mix_file.open( mix_file, mode );
-//    m_mix_file.open( parameters );
+    m_mix_file.open( mix_file, boost::iostreams::mapped_file::mapmode::readonly );
     if( !m_mix_file.is_open() ){
         return false;
     }
@@ -126,4 +109,22 @@ std::optional<std::span<const char>> MIXFile::get_file(const std::string& filena
 
     return std::span<const char>(m_mix_file.const_data() + it->second.Offset,
                                     it->second.Size);
+}
+
+uint32_t MIXFile::get_file_size(const std::string& filename){
+    auto it = m_filename_to_info.find(filename);
+    if(it == m_filename_to_info.end()){
+        return 0;
+    }
+
+    return it->second.Size;
+}
+
+bool MIXFile::file_exists(const std::string& filename){
+    auto it = m_filename_to_info.find(filename);
+    if(it == m_filename_to_info.end()){
+        return false;
+    }
+
+    return true;
 }

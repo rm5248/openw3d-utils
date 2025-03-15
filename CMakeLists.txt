@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.20)
 
 project(MixUtilities VERSION 0.1 LANGUAGES CXX)
 
@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         rmmixviewer.h
         rmmixviewer.ui
         mixfile.h mixfile.cpp
+        mixfilemodel.h mixfilemodel.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
