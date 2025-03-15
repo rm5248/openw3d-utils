@@ -16,6 +16,18 @@
 namespace openw3d {
 
 /**
+ * File information struct for MIX file V1.
+ */
+struct FileInfoStruct_Mix1 {
+    bool operator== (const FileInfoStruct_Mix1 &src)	{ return false; }
+    bool operator!= (const FileInfoStruct_Mix1 &src)	{ return true; }
+
+    uint32_t CRC;				// CRC code for embedded file.
+    uint32_t Offset;			// Offset from start of MIX file.
+    uint32_t Size;				// Size of data subfile.
+};
+
+/**
  * Represents a Westwood MIX file.
  */
 class MIXFile
@@ -69,16 +81,9 @@ public:
      */
     bool file_exists(const std::string& filename);
 
+    std::optional<FileInfoStruct_Mix1> file_info(const std::string& filename);
+
 private:
-    struct FileInfoStruct_Mix1 {
-        bool operator== (const FileInfoStruct_Mix1 &src)	{ return false; }
-        bool operator!= (const FileInfoStruct_Mix1 &src)	{ return true; }
-
-        uint32_t CRC;				// CRC code for embedded file.
-        uint32_t Offset;			// Offset from start of MIX file.
-        uint32_t Size;				// Size of data subfile.
-    };
-
     boost::iostreams::mapped_file m_mix_file;
     std::map<std::string,FileInfoStruct_Mix1> m_filename_to_info;
 };

@@ -20,6 +20,7 @@ set(PROJECT_SOURCES
         rmmixviewer.ui
         mixfile.h mixfile.cpp
         mixfilemodel.h mixfilemodel.cpp
+        mixfiledisplay.h mixfiledisplay.cpp mixfiledisplay.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -48,6 +49,9 @@ endif()
 target_link_libraries(MixUtilities PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     ${Boost_LIBRARIES}
+)
+target_include_directories(MixUtilities PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 set_target_properties(MixUtilities PROPERTIES

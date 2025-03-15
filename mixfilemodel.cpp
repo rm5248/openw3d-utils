@@ -124,3 +124,7 @@ void MIXFileModel::filterFiles(){
     }
     endResetModel();
 }
+
+QString MIXFileModel::fileAtIndex(int index){
+    return QString::fromStdString(m_mix_filenames[index]);
+}

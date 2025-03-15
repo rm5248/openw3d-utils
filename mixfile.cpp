@@ -128,3 +128,12 @@ bool MIXFile::file_exists(const std::string& filename){
 
     return true;
 }
+
+std::optional<openw3d::FileInfoStruct_Mix1> MIXFile::file_info(const std::string& filename){
+    auto it = m_filename_to_info.find(filename);
+    if(it == m_filename_to_info.end()){
+        return {};
+    }
+
+    return it->second;
+}

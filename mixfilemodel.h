@@ -35,6 +35,8 @@ public:
      */
     void displayFilesLike(QString name);
 
+    QString fileAtIndex(int index);
+
 private:
     void filterFiles();
 

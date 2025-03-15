@@ -43,8 +43,14 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QTableView" name="mixFileContents"/>
-      <widget class="QWidget" name="fileDisplay" native="true"/>
+      <widget class="QTableView" name="mixFileContents">
+       <property name="font">
+        <font>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+      </widget>
+      <widget class="MIXFileDisplay" name="fileDisplay" native="true"/>
      </widget>
     </item>
    </layout>
@@ -79,6 +85,14 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MIXFileDisplay</class>
+   <extends>QWidget</extends>
+   <header>mixfiledisplay.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

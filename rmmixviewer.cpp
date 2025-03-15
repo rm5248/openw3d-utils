@@ -29,6 +29,8 @@ RMMixViewer::RMMixViewer(QWidget *parent)
             this, &RMMixViewer::viewAllExtensions);
     connect(&m_regex_debounce, &QTimer::timeout,
             this, &RMMixViewer::lineedit_done);
+    connect(ui->mixFileContents, &QTableView::clicked,
+            this, &RMMixViewer::tableClicked);
 }
 
 RMMixViewer::~RMMixViewer()
@@ -102,4 +104,17 @@ void RMMixViewer::on_lineEdit_textChanged(const QString &arg1)
 
 void RMMixViewer::lineedit_done(){
     m_mix_table_model.displayFilesLike(ui->lineEdit->text());
+}
+
+void RMMixViewer::tableClicked(const QModelIndex &index){
+    QString filename = m_mix_table_model.fileAtIndex(index.row());
+    std::string filename_std = filename.toStdString();
+
+    auto fileinfo = m_mix.file_info(filename_std);
+
+    if(fileinfo){
+        ui->fileDisplay->displayFileFromMIX(filename,
+                                            fileinfo.value(),
+                                            m_mix.get_file(filename_std));
+    }
 }
