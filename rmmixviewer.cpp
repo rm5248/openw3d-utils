@@ -58,7 +58,7 @@ void RMMixViewer::on_actionOpen_triggered()
     }
 
     m_mix_table_model.setMixFile(&m_mix);
-    m_mix_file_label->setText(QString::fromStdString(path));
+    m_mix_file_label->setText(QString::fromStdString(path.string()));
     ui->mixFileContents->resizeColumnToContents(0);
     ui->mixFileContents->resizeColumnToContents(1);
 
