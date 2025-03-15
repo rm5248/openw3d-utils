@@ -15,9 +15,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 # https://github.com/lballabio/QuantLib/issues/2088#issuecomment-2405001198
 if (POLICY CMP0167)
     # The FindBoost module is removed in cmake 3.30, finding the upstream BoostConfig.cmake
-    find_package(Boost CONFIG REQUIRED)
+    find_package(Boost CONFIG REQUIRED COMPONENTS iostreams)
 else()
-    find_package(Boost REQUIRED)
+    find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()
 
 set(PROJECT_SOURCES
@@ -55,7 +55,7 @@ endif()
 
 target_link_libraries(MixUtilities PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
-    ${Boost_LIBRARIES}
+    Boost::iostreams
 )
 target_include_directories(MixUtilities PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
