@@ -51,14 +51,14 @@ void RMMixViewer::on_actionOpen_triggered()
                                                     QString(),
                                                     tr("MIX Files (*.mix *.MIX *.dat *.DAT);;All Files (*)"));
 
-    std::filesystem::path path = fileName.toStdString();
+    const std::filesystem::path path = fileName.toStdString();
     if(!m_mix.open(path)){
         QMessageBox::critical(this, "Unable to open MIX", "Unable to open MIX file");
         return;
     }
 
     m_mix_table_model.setMixFile(&m_mix);
-    m_mix_file_label->setText(QString::fromStdString(path));
+    m_mix_file_label->setText(QString::fromStdString(path.string()));
     ui->mixFileContents->resizeColumnToContents(0);
     ui->mixFileContents->resizeColumnToContents(1);
 
