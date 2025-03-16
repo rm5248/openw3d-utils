@@ -20,6 +20,9 @@ public:
     void displayFileFromMIX(QString fileName, const openw3d::FileInfoStruct_Mix1 file_info, std::optional<std::span<const char>> data);
 
 private:
+    bool isFileText(std::span<const char>);
+
+private:
     Ui::MIXFileDisplay *ui;
 };
 
