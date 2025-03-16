@@ -26,12 +26,12 @@ jobs:
       uses: ethanjli/cached-download-action@v0.1.2
       with:
           url: https://rm5248.com/renegade/vcpkg-export-20250316-091749.zip
-          destination: ${{github.workspace}}
+          destination: ${{github.workspace}}/vcpkg.zip
 #    - name: Setup anew (or from cache) vcpkg (and does not build any package)
 #      uses: lukka/run-vcpkg@v11
 
     - name: Extract vcpkg
-      run: 7z x vcpkg-export-20250316-091749.zip
+      run: 7z x vcpkg.zip
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
