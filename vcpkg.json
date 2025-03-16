@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "qtbase",
+    "boost-iostreams",
+    "log4cxx",
+    "fmt"
+  ]
+}
