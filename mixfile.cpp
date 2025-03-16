@@ -22,12 +22,19 @@ MIXFile::MIXFile()
 
 }
 
-bool MIXFile::open(std::filesystem::path mix_file){
+bool MIXFile::open(const std::filesystem::path mix_file){
+    if( mix_file.empty() ){
+        return false;
+    }
+
     if( m_mix_file.is_open() ){
         m_mix_file.close();
     }
 
-    m_mix_file.open( mix_file, boost::iostreams::mapped_file::mapmode::readonly );
+    // Windows really does not like using std::filesystem::path when opening the memorymapped file.
+    // So, let's just convert it to a string
+    const std::string mix_path = mix_file.string();
+    m_mix_file.open( mix_path, boost::iostreams::mapped_file::mapmode::readonly );
     if( !m_mix_file.is_open() ){
         return false;
     }
