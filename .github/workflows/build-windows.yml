@@ -22,15 +22,43 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup anew (or from cache) vcpkg (and does not build any package)
-      uses: lukka/run-vcpkg@v11
+    - name: Download vcpkg cache
+      uses: ethanjli/cached-download-action@v0.1.2
+      with:
+          url: https://rm5248.com/renegade/vcpkg-export-20250316-091749.zip
+          destination: ${{github.workspace}}
+#    - name: Setup anew (or from cache) vcpkg (and does not build any package)
+#      uses: lukka/run-vcpkg@v11
+
+    - name: Extract vcpkg
+      run: 7z x vcpkg-export-20250316-091749.zip
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg/scripts/buildsystems/vcpkg.cmake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/vcpkg-export-20250316-091749/scripts/buildsystems/vcpkg.cmake
 
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Create windows zip
+      shell: pwsh
+      run: |
+        mkdir ./build/mix-utilities
+        cp ./build/*.dll ./build/mix-utilities
+        cp ./build/*.exe ./build/mix-utilities
+        cp -r ./build/generic ./build/mix-utilities
+        cp -r ./build/imageformats ./build/mix-utilities
+        cp -r ./build/networkinformation ./build/mix-utilities
+        cp -r ./build/platforms ./build/mix-utilities
+        cp -r ./build/styles ./build/mix-utilities
+        cp -r ./build/tls ./build/mix-utilities
+        cp -r ./build/translations ./build/mix-utilities
+        cd build
+        7z a mix-utilities.zip mix-utilities
+
+    - name: Archive binaries
+        uses: actions/upload-artifact@v4
+        with:
+          path: build/mix-utilities.zip
