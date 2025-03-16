@@ -46,15 +46,15 @@ jobs:
       shell: pwsh
       run: |
         mkdir ./build/mix-utilities
-        cp ./build/*.dll ./build/mix-utilities
-        cp ./build/*.exe ./build/mix-utilities
-        cp -r ./build/generic ./build/mix-utilities
-        cp -r ./build/imageformats ./build/mix-utilities
-        cp -r ./build/networkinformation ./build/mix-utilities
-        cp -r ./build/platforms ./build/mix-utilities
-        cp -r ./build/styles ./build/mix-utilities
-        cp -r ./build/tls ./build/mix-utilities
-        cp -r ./build/translations ./build/mix-utilities
+        cp ./build/${{env.BUILD_TYPE}}/*.dll ./build/mix-utilities
+        cp ./build/${{env.BUILD_TYPE}}/*.exe ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/generic ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/imageformats ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/networkinformation ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/platforms ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/styles ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/tls ./build/mix-utilities
+        cp -r ./build/${{env.BUILD_TYPE}}/translations ./build/mix-utilities
         cd build
         7z a mix-utilities.zip mix-utilities
 
