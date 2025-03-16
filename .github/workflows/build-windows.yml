@@ -59,6 +59,6 @@ jobs:
         7z a mix-utilities.zip mix-utilities
 
     - name: Archive binaries
-        uses: actions/upload-artifact@v4
-        with:
-          path: build/mix-utilities.zip
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/mix-utilities.zip
