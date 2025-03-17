@@ -65,6 +65,9 @@ target_include_directories(MixUtilities PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     dds_image/include
 )
+target_compile_options(MixUtilities PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>: /Zc:preprocessor>
+)
 
 set_target_properties(MixUtilities PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
