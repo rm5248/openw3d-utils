@@ -27,7 +27,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void displayFilesOfTypes(QVector<QString> extensions);
-    QSet<QString> validExtensions() const;
+    QVector<QString> validExtensions() const;
 
     /**
      * Display files named like 'name'.  Used as a regex.

@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 find_package(log4cxx)
+find_package(fmt)
 
 # https://github.com/lballabio/QuantLib/issues/2088#issuecomment-2405001198
 if (POLICY CMP0167)
@@ -58,9 +59,11 @@ target_link_libraries(MixUtilities PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Boost::iostreams
     log4cxx
+    fmt::fmt
 )
 target_include_directories(MixUtilities PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    dds_image/include
 )
 
 set_target_properties(MixUtilities PROPERTIES

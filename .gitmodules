@@ -1,0 +1,3 @@
+[submodule "dds_image"]
+	path = dds_image
+	url = https://github.com/spnda/dds_image.git

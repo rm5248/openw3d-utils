@@ -1,4 +1,5 @@
 #include <QRegularExpression>
+#include <QtAlgorithms>
 #include <iostream>
 
 #include "mixfile.h"
@@ -78,15 +79,24 @@ void MIXFileModel::displayFilesOfTypes(QVector<QString> extensions){
     filterFiles();
 }
 
-QSet<QString> MIXFileModel::validExtensions() const{
+QVector<QString> MIXFileModel::validExtensions() const{
     QSet<QString> ret;
 
+    // Put all the extensions into a set(to eliminate duplicates)
     for(const std::string& str : m_mix_filenames){
         const std::filesystem::path path = str;
         ret.insert(QString::fromStdString(path.extension().string()));
     }
 
-    return ret;
+    // then return as a vector so they are sorted
+    QVector<QString> real_ret;
+    for(QString str : ret){
+        real_ret.push_back(str);
+    }
+
+    std::sort(real_ret.begin(), real_ret.end());
+
+    return real_ret;
 }
 
 void MIXFileModel::displayFilesLike(QString name){

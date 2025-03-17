@@ -2,6 +2,7 @@
 #define MIXFILEDISPLAY_H
 
 #include <QWidget>
+#include <QPixmap>
 
 #include "mixfile.h"
 
@@ -24,6 +25,8 @@ private:
 
 private:
     Ui::MIXFileDisplay *ui;
+    bool m_support_tga = false;
+    QPixmap m_display_image;
 };
 
 #endif // MIXFILEDISPLAY_H
