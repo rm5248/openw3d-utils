@@ -22,6 +22,8 @@ public:
 
 private:
     bool isFileText(std::span<const char>);
+    bool loadDDS(QString fileName, std::span<const char>);
+    void decodeDDS_BC1(int width, int height, const std::span<uint8_t>& pixel_data);
 
 private:
     Ui::MIXFileDisplay *ui;
