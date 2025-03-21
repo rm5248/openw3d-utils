@@ -46,11 +46,12 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
     }
 
     label_text = QString("CRC: %1\nSize: %2")
-            .arg(file_info.CRC)
+            .arg(QString("%1").arg(file_info.CRC, 0, 16).toUpper())
             .arg(file_info.Size);
 
     ui->basicFileInfo->setText(label_text);
 
+    ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
 
@@ -62,6 +63,7 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
         // the always.dat from renegade has some txt/ini files that have non-printable characters
         QString text = QString::fromUtf8(data->data(), data->size());
         ui->tabWidget->setTabEnabled(1, true);
+        ui->tabWidget->setCurrentIndex(1);
         ui->text_view->clear();
         ui->text_view->insertPlainText(text);
     }else if(path.extension() == ".tga"){
@@ -70,6 +72,7 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
             LOG4CXX_DEBUG_FMT(logger, "Loaded {} as TGA file", fileName.toStdString());
             ui->image_display->setPixmap(m_display_image);
             ui->tabWidget->setTabEnabled(2, true);
+            ui->tabWidget->setCurrentIndex(2);
         }else{
             LOG4CXX_DEBUG_FMT(logger, "Unable to load {} as TGA file", fileName.toStdString());
         }
@@ -79,6 +82,7 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
             LOG4CXX_DEBUG_FMT(logger, "Unable to load {} as DDS file", fileName.toStdString());
         }else{
             ui->tabWidget->setTabEnabled(2, true);
+            ui->tabWidget->setCurrentIndex(2);
             ui->image_display->setPixmap(m_display_image);
         }
     }
