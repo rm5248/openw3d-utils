@@ -32,6 +32,7 @@ private slots:
     void on_lineEdit_textChanged(const QString &arg1);
     void lineedit_done();
     void tableClicked(const QModelIndex &index);
+    void rowRightClick(const QPoint &pos);
 
 private:
     Ui::RMMixViewer *ui;

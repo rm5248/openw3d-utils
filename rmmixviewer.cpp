@@ -1,9 +1,15 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QLabel>
+#include <QTableWidgetItem>
+
+#include <fmt/format.h>
+#include <log4cxx/logger.h>
 
 #include "rmmixviewer.h"
 #include "./ui_rmmixviewer.h"
+
+static auto logger = log4cxx::Logger::getLogger("RMMixViewer");
 
 RMMixViewer::RMMixViewer(QWidget *parent)
     : QMainWindow(parent)
@@ -25,12 +31,16 @@ RMMixViewer::RMMixViewer(QWidget *parent)
     m_regex_debounce.setInterval(250);
     m_regex_debounce.setSingleShot(true);
 
+    ui->mixFileContents->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(m_view_all_types, &QAction::triggered,
             this, &RMMixViewer::viewAllExtensions);
     connect(&m_regex_debounce, &QTimer::timeout,
             this, &RMMixViewer::lineedit_done);
     connect(ui->mixFileContents, &QTableView::clicked,
             this, &RMMixViewer::tableClicked);
+    connect(ui->mixFileContents, &QTableView::customContextMenuRequested,
+            this, &RMMixViewer::rowRightClick);
 }
 
 RMMixViewer::~RMMixViewer()
@@ -120,5 +130,40 @@ void RMMixViewer::tableClicked(const QModelIndex &index){
         ui->fileDisplay->displayFileFromMIX(filename,
                                             fileinfo.value(),
                                             m_mix.get_file(filename_std));
+    }
+}
+
+void RMMixViewer::rowRightClick(const QPoint &pos){
+    int row = ui->mixFileContents->rowAt(pos.y());
+    if (row < 0) {
+        return;
+    }
+
+    QMenu menu;
+    QAction action_extract("Extract...");
+    menu.addAction(&action_extract);
+    QAction* action_to_do = menu.exec(QCursor::pos());
+    if(action_to_do == nullptr){
+        return;
+    }
+
+    if(action_to_do == &action_extract){
+        QString toExtract = m_mix_table_model.fileAtIndex(row);
+        QString toSaveAs = QFileDialog::getSaveFileName(this, "Extract file to...", toExtract );
+        if(toSaveAs.isNull()){
+            return;
+        }
+
+        QFile f(toSaveAs);
+        if(!f.open(QIODevice::WriteOnly)){
+            LOG4CXX_ERROR(logger, "Can't open file to save to");
+            return;
+        }
+        std::optional<std::span<const char>> data = m_mix.get_file(toExtract.toStdString());
+        if(!data){
+            LOG4CXX_ERROR(logger, "Can't get data from MIX??");
+            return;
+        }
+        f.write(data->data(), data->size());
     }
 }
