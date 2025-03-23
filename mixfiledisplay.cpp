@@ -31,6 +31,16 @@ MIXFileDisplay::MIXFileDisplay(QWidget *parent) :
         }
         LOG4CXX_DEBUG_FMT(logger, "Supported format: {}", ba.toStdString());
     }
+
+    m_mediaPlayer.setAudioOutput(&m_audioOutput);
+    m_audioOutput.setVolume(50);
+
+    connect(&m_mediaPlayer, &QMediaPlayer::positionChanged,
+            this, &MIXFileDisplay::mediaPlaybackPositionChanged);
+    connect(&m_mediaPlayer, &QMediaPlayer::durationChanged,
+            this, &MIXFileDisplay::mediaPlayerDurationChanged);
+    connect(&m_mediaPlayer, &QMediaPlayer::playbackStateChanged,
+            this, &MIXFileDisplay::playbackStateChanged);
 }
 
 MIXFileDisplay::~MIXFileDisplay()
@@ -54,6 +64,9 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
     ui->tabWidget->setCurrentIndex(0);
     ui->tabWidget->setTabEnabled(1, false);
     ui->tabWidget->setTabEnabled(2, false);
+    ui->tabWidget->setTabEnabled(3, false);
+    m_haveExtractedMP3 = false;
+    m_mediaPlayer.pause();
 
     std::filesystem::path path = fileName.toStdString();
     // Now let's show the relevant portion in the display area
@@ -85,6 +98,10 @@ void MIXFileDisplay::displayFileFromMIX(QString fileName, const openw3d::FileInf
             ui->tabWidget->setCurrentIndex(2);
             ui->image_display->setPixmap(m_display_image);
         }
+    }else if(path.extension() == ".mp3" || path.extension() == ".wav"){
+        m_currentData = *data;
+        ui->tabWidget->setTabEnabled(3, true);
+        ui->tabWidget->setCurrentIndex(3);
     }
 
     // Always display the hex information
@@ -219,4 +236,47 @@ void MIXFileDisplay::decodeDDS_BC1(int width, int height, const std::span<uint8_
 
     m_display_image.convertFromImage(tmp_image);
 //    tmp_image.save("/tmp/img.jpg");
+}
+
+void MIXFileDisplay::extractMP3(){
+    m_haveExtractedMP3 = true;
+    m_tmpMP3 = std::make_unique<QTemporaryFile>();
+    m_tmpMP3->open();
+    m_tmpMP3->write(m_currentData.data(), m_currentData.size());
+    m_tmpMP3->close();
+
+    m_mediaPlayer.setSource(QUrl::fromLocalFile(m_tmpMP3->fileName()));
+}
+
+void MIXFileDisplay::on_play_pause_clicked()
+{
+    if(m_mediaPlayer.playbackState() == QMediaPlayer::PlayingState){
+        m_mediaPlayer.pause();
+    }else{
+        if(!m_haveExtractedMP3){
+            extractMP3();
+        }
+        m_mediaPlayer.play();
+    }
+}
+
+void MIXFileDisplay::mediaPlaybackPositionChanged(int64_t pos){
+    ui->audioSeek->setValue(pos);
+}
+
+void MIXFileDisplay::mediaPlayerDurationChanged(int64_t duration){
+    ui->audioSeek->setRange(0, m_mediaPlayer.duration());
+}
+
+void MIXFileDisplay::playbackStateChanged(QMediaPlayer::PlaybackState newState){
+    if(newState == QMediaPlayer::StoppedState ||
+            newState == QMediaPlayer::PausedState){
+        ui->play_pause->setText("Play");
+    }else{
+        ui->play_pause->setText("Pause");
+    }
+
+    if(newState == QMediaPlayer::StoppedState){
+        ui->audioSeek->setValue(0);
+    }
 }

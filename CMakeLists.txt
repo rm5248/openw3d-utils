@@ -9,8 +9,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Multimedia)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Multimedia)
 find_package(log4cxx)
 find_package(fmt)
 
@@ -23,7 +23,7 @@ else()
 endif()
 
 set(PROJECT_SOURCES
-        main.cpp
+        mixviewer_main.cpp
         rmmixviewer.cpp
         rmmixviewer.h
         rmmixviewer.ui
@@ -57,6 +57,7 @@ endif()
 
 target_link_libraries(MixUtilities PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Multimedia
     Boost::iostreams
     log4cxx
     fmt::fmt
